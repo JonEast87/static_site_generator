@@ -9,9 +9,12 @@ class HTMLNode:
 		raise NotImplementedError("")
 
 	def props_to_html(self):
-		access_keys = self.props.keys()
-		access_keys_list = list(access_keys)
-		return f"{access_keys_list[0]}='{self.props['href']}' {access_keys_list[1]}='{self.props['target']}'"
+		html_attributes = list()
+		# Replaced old method to better handle variety of sizes
+		for key, value in self.props.items():
+			html_attributes.append(f'{key}="{value}"')
+		
+		return " ".join(html_attributes)
 
 	def __eq__(self, other):
 		if isinstance(other, HTMLNode):
@@ -22,3 +25,27 @@ class HTMLNode:
 
 	def __repr__(self):
 		return f'HTMLNode("{self.tag}, {self.value}, {self.children}, {self.props}")'
+
+class LeafNode(HTMLNode):
+	def __init__(self, tag, value, props=None):
+		super().__init__(tag, value, None, props)
+		self.tag = tag
+		self.value = value
+		self.props = props if props is not None else None
+
+	def to_html(self):
+		if self.value == None:
+			raise ValueError("All leaf nodes must have a value")
+
+		if self.tag == None:
+			return self.value
+
+		html = f"<{self.tag}"
+
+		if self.props:
+			props = self.props_to_html()
+			html += f" {props}"
+
+		html += f">{self.value}</{self.tag}>"
+
+		return html
