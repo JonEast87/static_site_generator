@@ -23,9 +23,11 @@ class HTMLNode:
 			)
 		return False
 
+	# Readable format, for debugging purposes
 	def __repr__(self):
 		return f'HTMLNode("{self.tag}, {self.value}, {self.children}, {self.props}")'
 
+# Handles the end node, ie childless nodes
 class LeafNode(HTMLNode):
 	def __init__(self, tag, value, props=None):
 		super().__init__(tag, value, None, props)
@@ -47,5 +49,36 @@ class LeafNode(HTMLNode):
 			html += f" {props}"
 
 		html += f">{self.value}</{self.tag}>"
+
+		return html
+
+# Handles any nodes that has children
+class ParentNode(HTMLNode):
+	def __init__(self, tag, children, props=None):
+		super().__init__(tag, None, children, props)
+		self.tag = tag
+		self.children = children
+		self.props = props
+
+	def to_html(self):
+		if self.tag == None:
+			raise ValueError("All nodes must have a tag")
+
+		if self.children == None:
+			raise ValueError("Nodes nodes must have children")
+
+		# Coversion to HTML begins here
+		html = f"<{self.tag}"
+
+		if self.props:
+			html += " " + self.props_to_html
+
+		html += ">"
+
+		# Iteration through the children list to ensure all nested nodes are converted
+		for child in self.children:
+			html += child.to_html()
+
+		html += f"</{self.tag}>"
 
 		return html
