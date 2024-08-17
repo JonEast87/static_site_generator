@@ -1,9 +1,13 @@
+import re
+
 from textnode import (
 	TextNode,
 	text_type_text,
 	text_type_bold,
 	text_type_italic,
 	text_type_code,
+	text_type_link,
+	text_type_image,
 )
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
@@ -24,7 +28,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 				text_list.append(TextNode(node, text_type_text))
 			elif node.startswith(" "):
 				text_list.append(TextNode(node, text_type_text))
-			# Added to ensure end any styles that end the sentence are not including a blank space
+			# Added to ensure any styles that end the sentence are not including a blank space
 			elif node == "":
 				continue
 			else:
@@ -32,3 +36,11 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 		new_nodes_list.extend(text_list)
 	return new_nodes_list
+
+def extract_markdown_images(text):
+	matches = re.findall(r"!\[(.*?)\]\((.*?)\)", text)
+	return matches
+
+def extract_markdown_links(text):
+	matches = re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
+	return matches

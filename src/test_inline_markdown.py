@@ -1,6 +1,11 @@
 import unittest
 
-from split_nodes_delimiter import split_nodes_delimiter
+from inline_markdown import (
+	split_nodes_delimiter,
+	extract_markdown_images,
+	extract_markdown_links
+)
+
 from textnode import (
 	TextNode,
 	text_type_text,
@@ -10,7 +15,7 @@ from textnode import (
 )
 
 # Added more robust tests to better check if classes and functions were performing like they should
-class TestTextNodeToHTMLNode(unittest.TestCase):
+class TestInlineMarkdown(unittest.TestCase):
 	def test_delim_bold(self):
 	    node = TextNode("This is text with a **bolded** word", text_type_text)
 	    new_nodes = split_nodes_delimiter([node], "**", text_type_bold)
@@ -90,6 +95,23 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
 	        new_nodes,
 	    )
 
+	def test_images(self):
+		matches = extract_markdown_images(
+			"This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+		)		
+		self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+	def test_extract_markdown_links(self):
+		matches = extract_markdown_links(
+		    "This is text with a [link](https://boot.dev) and [another link](https://blog.boot.dev)"
+		)
+		self.assertListEqual(
+		    [
+		        ("link", "https://boot.dev"),
+		        ("another link", "https://blog.boot.dev"),
+		    ],
+		    matches,
+	    )
 
 if __name__ == "__main__":
 	unittest.main()
