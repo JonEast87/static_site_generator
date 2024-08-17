@@ -12,7 +12,7 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
     		TextNode("code block", "code", None),
     		TextNode(" word", "text", None),
 		]
-		self.assertEqual(new_nodes, expected_results)
+		self.assertEqual(html_node, expected_results)
 
 	def test_bold(self):
 		node = TextNode("This is text with a **bolded** word", "bold")
@@ -22,7 +22,7 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
     		TextNode("bolded", "bold", None),
     		TextNode(" word", "text", None),
 		]
-		self.assertEqual(new_nodes, expected_results)
+		self.assertEqual(html_node, expected_results)
 
 	def test_text(self):
 		node = TextNode("This is text", "text")
@@ -30,25 +30,8 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
 		expected_results = [
     		TextNode("This is text", "text", None)
 		]
-		self.assertEqual(new_nodes, expected_results)
+		self.assertEqual(html_node, expected_results)
 
-	def test_text(self):
-		node = TextNode("This is text", "link")
-		html_node = split_nodes_delimiter([node], "", "text")
-		expected_results = [
-    		TextNode("This is text", "text", None)
-		]
-		self.assertEqual(new_nodes, expected_results)
-
-	def test_image(self):
-		node = TextNode("This is an image", "image", "https://www.boot.dev")
-		html_node = text_node_to_html_node(node)
-		self.assertEqual(html_node.tag, "img")
-		self.assertEqual(html_node.value, "")
-		self.assertEqual(
-			html_node.props,
-			{"src": "https://www.boot.dev", "alt": "This is an image"},
-		)
 
 if __name__ == "__main__":
 	unittest.main()

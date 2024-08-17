@@ -7,7 +7,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 			new_nodes_list.append(old_node)
 			return new_nodes_list
 		else:
-			old_nodes_split = old_node.text.split(f"{delimiter}")
+			old_nodes_split = old_node.text.split(delimiter)
 			return_node = iterate_nodes(old_nodes_split, text_type)
 			new_nodes_list.extend(return_node)
 			return new_nodes_list
