@@ -99,3 +99,24 @@ def text_to_textnodes(text):
 	text_node_list = split_nodes_image(text_node_list)
 	text_node_list = split_nodes_link(text_node_list)
 	return text_node_list
+
+def markdown_to_blocks(markdown):
+	split_markdown = markdown.split("\n\n")
+	split_block = list()
+	for word in split_markdown:
+		if word == "":
+			continue
+		word = word.strip()
+		split_block.append(word)
+	return split_block
+
+
+markdown = """# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item"""
+output = markdown_to_blocks(markdown)
+print(output)
