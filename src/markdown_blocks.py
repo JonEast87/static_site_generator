@@ -80,6 +80,7 @@ def text_to_children(text):
 	text_nodes = text_to_textnodes(text)
 	children = list()
 	for text_node in text_nodes:
+		print(text_node)
 		html_node = text_node_to_html_node(text_node)
 		children.append(html_node)
 	return children
@@ -117,7 +118,7 @@ def olist_to_html_node(block):
 	for item in items:
 		text = block[3:]
 		children = text_to_children(text)
-		html_items.append(ParentNode("li"), children)
+		html_items.append(ParentNode("li", children))
 	return ParentNode("ol", html_items)
 
 def ulist_to_html_node(block):
@@ -138,4 +139,4 @@ def quote_to_html_node(block):
 		new_lines.append(line.lstrip(">").strip())
 	content = " ".join(new_lines)
 	children = text_to_children(content)
-	return text_to_children(content)
+	return ParentNode("blockquote", children)
