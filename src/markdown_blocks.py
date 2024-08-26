@@ -52,50 +52,13 @@ def block_to_block_type(block):
 		return block_type_olist
 	return block_type_paragraph
 
-
-markdown_text = """
-# Tolkien Fan Club
-
-**I like Tolkien**. Read my [first post here](/majesty) (sorry the link doesn't work yet)
-
-> All that is gold does not glitter
-
-## Reasons I like Tolkien
-
-* You can spend years studying the legendarium and still not understand its depths
-* It can be enjoyed by children and adults alike
-* Disney *didn't ruin it*
-* It created an entirely new genre of fantasy
-
-## My favorite characters (in order)
-
-1. Gandalf
-2. Bilbo
-3. Sam
-4. Glorfindel
-5. Galadriel
-6. Elrond
-7. Thorin
-8. Sauron
-9. Aragorn
-
-Here's what `elflang` looks like (the perfect coding language):
-
-```
-func main(){
-    fmt.Println("Hello, World!")
-}
-```
-"""
-
-def markdown_to_html(markdown):
+def markdown_to_html_node(markdown):
 	blocks = markdown_to_blocks(markdown)
-	htmlnode_list = list()
+	children = list()
 	for block in blocks:
 		html_node = block_to_html_node(block)
-		htmlnode_list.append(html_node)
-		print(block)
-	return ParentNode("div", htmlnode_list, None)
+		children.append(html_node)
+	return ParentNode("div", children, None)
 
 def block_to_html_node(block):
 	block_type = block_to_block_type(block)
@@ -107,20 +70,25 @@ def block_to_html_node(block):
 		return olist_to_html_node(block)
 	if block_type == block_type_code:
 		return code_to_html_node(block)
-	# if tag == "quote":
-	# 	new_htmlnode = HTMLNode("blockquote", block)
-	# 	htmlnode_list.append(new_htmlnode)
+	if block_type == block_type_quote:
+		return quote_to_html_node(block)
 	if block_type == block_type_paragraph:
-		return text_to_children(block)
+		return paragraph_to_html_node(block)
+	raise ValueError("Invalid block type")
 
 def text_to_children(text):
-	print(text)
 	text_nodes = text_to_textnodes(text)
 	children = list()
 	for text_node in text_nodes:
 		html_node = text_node_to_html_node(text_node)
 		children.append(html_node)
 	return children
+
+def paragraph_to_html_node(block):
+	lines = block.split("\n")
+	paragraph = " ".join(lines)
+	children = text_to_children(paragraph)
+	return ParentNode("p", children)
 
 def heading_to_html_node(block):
 	level = 0
@@ -145,7 +113,7 @@ def code_to_html_node(block):
 
 def olist_to_html_node(block):
 	items = block.split("\n")
-	html_items = []
+	html_items = list()
 	for item in items:
 		text = block[3:]
 		children = text_to_children(text)
@@ -154,12 +122,20 @@ def olist_to_html_node(block):
 
 def ulist_to_html_node(block):
 	items = block.split("\n")
-	html_items = []
+	html_items = list()
 	for item in items:
 		text = block[2:]
 		children = text_to_children(text)
 		html_items.append(ParentNode("li", children))
 	return ParentNode("ul", html_items)
 
-output = markdown_to_html(markdown_text)
-print(output)
+def quote_to_html_node(block):
+	lines = block.split("\n")
+	new_lines = list()
+	for line in lines:
+		if not line.startswith(">"):
+			raise ValueError("Invalid quote block")
+		new_lines.append(line.lstrip(">").strip())
+	content = " ".join(new_lines)
+	children = text_to_children(content)
+	return text_to_children(content)
