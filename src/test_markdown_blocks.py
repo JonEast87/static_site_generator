@@ -82,7 +82,7 @@ tag here
 		html = node.to_html()
 		self.assertEqual(
 			html,
-			"<div><p>This <b>bolded</b> paragraph text in a p tag here</p></div>",
+			"<div><p>This is <b>bolded</b> paragraph text in a p tag here</p></div>",
 			)
 
 if __name__ == "__main__":
