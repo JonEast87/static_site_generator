@@ -66,7 +66,7 @@ def split_nodes_image(old_nodes):
 				new_nodes_list.append(TextNode(image_tup[0], text_type_image, image_tup[1]))
 			if new_node_text.strip(): # Ensures empty content is not appended
 				new_nodes_list.append(TextNode(new_node_text, text_type_text))
-			return new_nodes_list
+	return new_nodes_list
 
 def split_nodes_link(old_nodes):
 	new_nodes_list = list()
@@ -89,7 +89,7 @@ def split_nodes_link(old_nodes):
 				new_nodes_list.append(TextNode(link_tup[0], text_type_link, link_tup[1]))
 			if new_node_text.strip(): # Ensures empty content is not appended
 				new_nodes_list.append(TextNode(new_node_text, text_type_text))
-			return new_nodes_list
+	return new_nodes_list
 
 def text_to_textnodes(text):
 	base_text_node = [TextNode(text, "text")]
