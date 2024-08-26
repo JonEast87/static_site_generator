@@ -94,33 +94,27 @@ def markdown_to_html(markdown):
 	for block in blocks:
 		html_node = block_to_html_node(block)
 		htmlnode_list.append(html_node)
+		print(block)
 	return ParentNode("div", htmlnode_list, None)
 
 def block_to_html_node(block):
-	if tag == "heading":
-			header = 0
-			for char in block:
-				if char == "#":
-					header += 1
-			new_htmlnode = HTMLNode(f"h{header}", block)
-			htmlnode_list.append(new_htmlnode)
-	if tag == "unordered_list":
-		new_htmlnode = HTMLNode("ul", block)
-		htmlnode_list.append(new_htmlnode)
-	if tag == "ordered_list":
-		new_htmlnode = HTMLNode("ol", block)
-		htmlnode_list.append(new_htmlnode)
-	if tag == "code":
-		new_htmlnode = HTMLNode("code", block)
-		htmlnode_list.append(new_htmlnode)
-	if tag == "quote":
-		new_htmlnode = HTMLNode("blockquote", block)
-		htmlnode_list.append(new_htmlnode)
-	if tag == "paragraph":
-		new_parentnode = HTMLNode("p", block)
-		htmlnode_list.append(new_htmlnode)
+	block_type = block_to_block_type(block)
+	if block_type == block_type_heading:
+		return heading_to_html_node(block)
+	if block_type == block_type_ulist:
+		return ulist_to_html_node(block)
+	if block_type == block_type_olist:
+		return olist_to_html_node(block)
+	if block_type == block_type_code:
+		return code_to_html_node(block)
+	# if tag == "quote":
+	# 	new_htmlnode = HTMLNode("blockquote", block)
+	# 	htmlnode_list.append(new_htmlnode)
+	if block_type == block_type_paragraph:
+		return text_to_children(block)
 
 def text_to_children(text):
+	print(text)
 	text_nodes = text_to_textnodes(text)
 	children = list()
 	for text_node in text_nodes:
@@ -129,26 +123,43 @@ def text_to_children(text):
 	return children
 
 def heading_to_html_node(block):
-	if tag == "heading":
-		header = 0
-		for char in block:
-			if char == "#":
-				header += 1
-			else:
-				break
-		if level + 1 >= len(block):
-			raise ValueError(f"Invalid heading level: {level}")
-		text = block[level + 1 :]
-		children = texst_to_children(text)
-		return ParentNode(f"h{level}", children)
+	level = 0
+	for char in block:
+		if char == "#":
+			level += 1
+		else:
+			break
+	if level + 1 >= len(block):
+		raise ValueError(f"Invalid heading level: {level}")
+	text = block[level + 1 :]
+	children = text_to_children(text)
+	return ParentNode(f"h{level}", children)
 
 def code_to_html_node(block):
 	if not block.startswith("```") or not block.endswith("```"):
 		raise ValueError("Invalid code block")
 	text = block[4:-3]
-	children = texst_to_children(text)
+	children = text_to_children(text)
 	code = ParentNode("code", children)
 	return ParentNode("pre", [code])
+
+def olist_to_html_node(block):
+	items = block.split("\n")
+	html_items = []
+	for item in items:
+		text = block[3:]
+		children = text_to_children(text)
+		html_items.append(ParentNode("li"), children)
+	return ParentNode("ol", html_items)
+
+def ulist_to_html_node(block):
+	items = block.split("\n")
+	html_items = []
+	for item in items:
+		text = block[2:]
+		children = text_to_children(text)
+		html_items.append(ParentNode("li", children))
+	return ParentNode("ul", html_items)
 
 output = markdown_to_html(markdown_text)
 print(output)
