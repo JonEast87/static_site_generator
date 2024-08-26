@@ -25,7 +25,7 @@ class HTMLNode:
 
 	# Readable format, for debugging purposes
 	def __repr__(self):
-		return f'HTMLNode("{self.tag}, {self.value}, {self.children}, {self.props}")'
+		return f'HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})'
 
 # Handles the end node, ie childless nodes
 class LeafNode(HTMLNode):
