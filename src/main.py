@@ -1,28 +1,15 @@
 import os, shutil
-
-def delete(dst):
-	delete_files = os.listdir(dst)
-	for file in delete_files:
-		if os.path.exists(dst + file):
-			if os.path.isfile(dst + file):
-				os.remove(dst + file)
-			if os.path.isdir(dst + file):
-				shutil.rmtree(dst + file)
-
-def copy(src, dst):
-	copy_files = os.listdir(src)
-	for copy_file in copy_files:
-		if os.path.exists(src + copy_file):
-			if os.path.isfile(src + copy_file):
-				shutil.copy(src + copy_file, dst)
-			if os.path.isdir(src + copy_file):
-				# Will replace this to do it recursively, since that is what the assignment calls for
-				shutil.copytree(src + copy_file, dst + copy_file)
+from copystatic import copystatic
 
 def main():
-	source = "./static/"
-	destination = "./public/"
-	delete(destination)
-	copy(source, destination)
+	source = "./static"
+	destination = "./public"
+	print("Deleting public directory...")
+	# Replaced the function call since it can be done much easier with a single line of code, oof
+	if os.path.exists(destination):
+		shutil.rmtree(destination)
+
+	print("Copying static files to public directory...")
+	copystatic(source, destination)
 
 main()
