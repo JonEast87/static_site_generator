@@ -1,7 +1,5 @@
 import os, shutil
-
 from markdown_blocks import markdown_to_html_node
-from extract_title import extract_title
 
 def generate_page(from_path, template_path, dest_path):
 	print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -24,3 +22,11 @@ def generate_page(from_path, template_path, dest_path):
 
 	write_html = open(dest_path, "w")
 	wrote_html = write_html.write(read_template)
+
+
+def extract_title(markdown):
+	lines = markdown.split("\n")
+	for line in lines:
+		if line.startswith("# "):
+			return line.lstrip("#").strip()
+	raise ValueError("Every markdown needs a header tag.")
