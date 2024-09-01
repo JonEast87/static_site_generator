@@ -1,5 +1,6 @@
 import os, shutil
 from copystatic import copystatic
+from generate_page import generate_page
 
 def main():
 	source = "./static"
@@ -11,5 +12,6 @@ def main():
 
 	print("Copying static files to public directory...")
 	copystatic(source, destination)
+	generate_page("./content/index.md", "template.html", "./public/index.html")
 
 main()
