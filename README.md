@@ -1,10 +1,17 @@
 # Static Site Generator
----
 
-### What this does
+--- --- --- --- --- ---
 
-This project takes your simple .md file and converts it into an HTML page with CSS if you are so inclined to add that.
+## What this does
+Translates your `.md` files into `.html`, including any assets located in `./static` for additional styling or photos.
 
-It is split into two big parts one is the inline logic that breaks up the passed in Markdown in small sentence sized chunks and converts them to the adjuctant HTML syntax.
+### How to use
+If you are interested in using this for fun then a few things:
 
-The block logic takes in chunks of paragraphs and splits them into the inline sentences to be better translated.
+1. `./static` holds all the css and images you desire to style your page.
+2. `./content` is where you will put your `.md` files, make folders that **include only one** `.md` file each, if you want multiple pages.
+3. `./public` will hold all generated pages after running the primary command with the folders nested exactly as they are in `./content`
+
+### Commands
+* `sh main.sh` will run the program to generate the pages and host the page locally at port 8888
+* `sh test.sh` will run the suite of tests previously treated when creating this program

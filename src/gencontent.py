@@ -4,23 +4,26 @@ from markdown_blocks import markdown_to_html_node
 
 def generate_page(from_path, template_path, dest_path):
 	print(f"Generating page from {from_path} to {dest_path} using {template_path}")
-	open_markdown = open(from_path, "r")
-	read_markdown = open_markdown.read()
+	from_file = open(from_path, "r")
+	markdown_content = from_file.read()
+	from_file.close()
 
-	open_template = open(template_path, "r")
-	read_template = open_template.read()
+	template_file = open(template_path, "r")
+	template = template_file.read()
+	template_file.close()
 
-	title = extract_title(read_markdown)
-	md_html_node = markdown_to_html_node(read_markdown).to_html()
+	node = markdown_to_html_node(markdown_content)
+	html = node.to_html()
 	
-	read_template = read_template.replace("{{ Title }}", title)
-	read_template = read_template.replace("{{ Content }}", md_html_node)
+	title = extract_title(markdown_content)
+	template = template.replace("{{ Title }}", title)
+	template = template.replace("{{ Content }}", html)
 
 	dest_dir_path = os.path.dirname(dest_path)
 	if dest_dir_path != "":
 		os.makedirs(dest_dir_path, exist_ok=True)
-	write_html = open(dest_path, "w")
-	write_html.write(read_template)
+	to_file = open(dest_path, "w")
+	to_file.write(template)
 
 
 def extract_title(markdown):
@@ -38,9 +41,6 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
 		if os.path.isfile(from_path):
 			dest_path = Path(dest_path).with_suffix(".html")
 			generate_page(from_path, template_path, dest_path)
-		# if os.path.isdir(f):
-		# 	if not os.path.exists(os.path.join(dest_dir_path, filename)):
 		else:
-			# os.mkdir(os.path.join(dest_dir_path, filename))
 			# Recursive call, passing `f` as the dir_path instead similar to copystatic
 			generate_pages_recursive(from_path, template_path, dest_path)
